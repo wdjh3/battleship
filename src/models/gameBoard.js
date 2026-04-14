@@ -20,7 +20,7 @@ class GameBoard {
 
   receiveAttack([x, y]) {
     if (!this.validateCoordinates([x, y])) {
-      console.log("Invalid Coordinates: Out of bounds")
+      console.log("Invalid Coordinates: Out of bounds");
       return false;
     }
   }
