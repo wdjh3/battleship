@@ -54,7 +54,7 @@ class GameBoard {
 
     const attackedCoords = this.board[`${x},${y}`];
     if (attackedCoords) {
-      // Assumption: it exists, and it's a ship
+      // Assumption: if it exists, it's a ship
       attackedCoords.hit();
       this.attacks[`${x},${y}`] = new Attack(true);
       return true;
