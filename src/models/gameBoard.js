@@ -48,8 +48,7 @@ class GameBoard {
   }
 
   receiveAttack([x, y]) {
-    if (!this.validateCoordinates([x, y])) {
-      // console.log("Invalid Coordinates: Out of bounds");
+    if (!this.validateCoordinates([x, y]) || this.attacks[`${x},${y}`]) {
       return false;
     }
 
