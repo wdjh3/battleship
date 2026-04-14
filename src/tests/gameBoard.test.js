@@ -3,9 +3,14 @@ import { GameBoard } from "../models/gameBoard.js";
 
 const gameBoard = new GameBoard();
 
+function resetGameBoard() {
+  gameBoard.board = {};
+  gameBoard.attacks = {};
+}
+
 afterEach(() => {
   console.log(JSON.stringify(gameBoard));
-  gameBoard.board = {};
+  resetGameBoard();
 })
 
 test("gameBoard to NOT place Ship out of bounds", () => {
@@ -101,4 +106,9 @@ test("receiveAttack() increases Ship's hit count", () => {
   expect(gameBoard.board["3,3"]).toEqual({length: 4, hits: 1, hasSunk: false});
   gameBoard.receiveAttack([4, 3]);
   expect(gameBoard.board["4,3"]).toEqual({length: 4, hits: 2, hasSunk: false});
+})
+
+test("receiveAttack() can't attack twice in the same coordinate", () => {
+  gameBoard.receiveAttack([1, 1]);
+  expect(gameBoard.receiveAttack([1, 1])).toBe(false);
 })
