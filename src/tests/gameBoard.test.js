@@ -3,6 +3,11 @@ import { GameBoard } from "../models/gameBoard.js";
 
 const gameBoard = new GameBoard();
 
+afterEach(() => {
+  console.log(JSON.stringify(gameBoard));
+  gameBoard.board = {};
+})
+
 test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
   const testCases = [
     [3, 11],
@@ -72,13 +77,20 @@ test("gameBoard to place Ship at expected coordinates and length", () => {
 });
 
 test("gameBoard to place Ship vertically at expected coordinates and length", () => {
-  gameBoard.placeShip([3, 3], 4, "vertical");
-  expect(gameBoard.board["3,3"]).toEqual(new Ship(4));
+  gameBoard.placeShip([3, 4], 4, "vertical");
   expect(gameBoard.board["3,4"]).toEqual(new Ship(4));
   expect(gameBoard.board["3,5"]).toEqual(new Ship(4));
   expect(gameBoard.board["3,6"]).toEqual(new Ship(4));
+  expect(gameBoard.board["3,7"]).toEqual(new Ship(4));
   // Not overextend
-  expect(gameBoard.board["3,7"]).toBeUndefined();
+  expect(gameBoard.board["3,8"]).toBeUndefined();
   // Tests if they're to the same reference
-  expect(gameBoard.board["3,3"] === gameBoard.board["3,4"]).toBe(true);
+  expect(gameBoard.board["3,4"] === gameBoard.board["3,5"]).toBe(true);
+})
+
+test("NOT place ship if collides with another ship", () => {
+  // [4/5/6/7/8, 5]
+  gameBoard.placeShip([4, 5], 5, "horizontal");
+  // [6, 4/5/6], collision on [6, 5]
+  expect(gameBoard.placeShip([6, 4], 3, "vertical")).toBe(false);
 })
