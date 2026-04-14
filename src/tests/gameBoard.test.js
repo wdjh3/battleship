@@ -94,3 +94,11 @@ test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
     expect(gameBoard.receiveAttack(testCase)).toBe(false);
   }
 });
+
+test("receiveAttack() increases Ship's hit count", () => {
+  gameBoard.placeShip([3, 3], 4);
+  gameBoard.receiveAttack([3, 3]);
+  expect(gameBoard.board["3,3"]).toEqual({length: 4, hits: 1, hasSunk: false});
+  gameBoard.receiveAttack([4, 3]);
+  expect(gameBoard.board["4,3"]).toEqual({length: 4, hits: 2, hasSunk: false});
+})
