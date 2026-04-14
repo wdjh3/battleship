@@ -8,19 +8,6 @@ afterEach(() => {
   gameBoard.board = {};
 })
 
-test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
-  const testCases = [
-    [3, 11],
-    [4, -2],
-    [15, 4],
-    [-3, 6],
-  ];
-
-  for (const testCase of testCases) {
-    expect(gameBoard.receiveAttack(testCase)).toBe(false);
-  }
-});
-
 test("gameBoard to NOT place Ship out of bounds", () => {
   const testCases = [
     [3, 11],
@@ -94,3 +81,16 @@ test("NOT place ship if collides with another ship", () => {
   // [6, 4/5/6], collision on [6, 5]
   expect(gameBoard.placeShip([6, 4], 3, "vertical")).toBe(false);
 })
+
+test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
+  const testCases = [
+    [3, 11],
+    [4, -2],
+    [15, 4],
+    [-3, 6],
+  ];
+
+  for (const testCase of testCases) {
+    expect(gameBoard.receiveAttack(testCase)).toBe(false);
+  }
+});
