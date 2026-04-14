@@ -52,6 +52,12 @@ class GameBoard {
       // console.log("Invalid Coordinates: Out of bounds");
       return false;
     }
+
+    const attackedCoords = this.board[`${x},${y}`];
+    if (attackedCoords) {
+      // Assumption: it exists, and it's a ship
+      attackedCoords.hit();
+    }
   }
 
   validateCoordinates([x, y]) {
