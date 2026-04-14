@@ -14,21 +14,36 @@ class GameBoard {
       // console.log("Invalid Coordinates: Out of bounds");
       return false;
     }
+    const coords = [];
     const newShip = new Ship(length);
+
     if (rotation === "horizontal") {
       if (!this.validateCoordinates([x + length - 1, y])) {
         return false;
       }
       for (let i = 0; i < length; i++) {
-        this.board[`${x + i},${y}`] = newShip;
+        coords.push(`${x + i},${y}`);
       }
     } else if (rotation === "vertical") {
       if (!this.validateCoordinates([x, y + length - 1])) {
         return false;
       }
       for (let i = 0; i < length; i++) {
-        this.board[`${x},${y + i}`] = newShip;
+        coords.push(`${x},${y + i}`);
       }
+    }
+
+    console.log(coords);
+
+    // Check if space if occupied by another ship
+    for (const coord of coords) {
+      if (this.board[coord]) {
+        return false;
+      };
+    }
+
+    for (const coord of coords) {
+      this.board[coord] = newShip;
     }
   }
 
