@@ -1,9 +1,8 @@
 export { Ship };
 
 class Ship {
-  constructor(length, rotation = "horizontal") {
+  constructor(length) {
     this.length = length;
-    this.rotation = rotation;
     this.hits = 0;
     this.hasSunk = false;
   }

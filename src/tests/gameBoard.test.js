@@ -1,3 +1,4 @@
+import { Ship } from "../models/ship.js";
 import { GameBoard } from "../models/gameBoard.js";
 
 const gameBoard = new GameBoard();
@@ -31,14 +32,14 @@ test("gameBoard to NOT place Ship out of bounds", () => {
 test("gameBoard to NOT place Ship length out of bounds", () => {
   const testCases = [
     {
-      "coords": [7, 3],
-      "length": 4,
-      "rotation": "horizontal",
+      coords: [7, 3],
+      length: 4,
+      rotation: "horizontal",
     },
     {
-      "coords": [7, 9],
-      "length": 4,
-      "rotation": "vertical",
+      coords: [7, 9],
+      length: 4,
+      rotation: "vertical",
     },
   ];
 
@@ -53,44 +54,31 @@ test("gameBoard to NOT place Ship length out of bounds", () => {
   }
 });
 
-test("gameBoard to place Ship at expected coordinates", () => {
+test("gameBoard to place Ship at expected coordinate", () => {
   gameBoard.placeShip([3, 3], 4);
-  expect(gameBoard.board["3,3"]).toEqual({
-    length: 4,
-    rotation: "horizontal",
-    hits: 0,
-    hasSunk: false,
-  });
+  expect(gameBoard.board["3,3"]).toEqual(new Ship(4));
 });
 
 test("gameBoard to place Ship at expected coordinates and length", () => {
   gameBoard.placeShip([3, 3], 4);
-  expect(gameBoard.board["3,3"]).toEqual({
-    length: 4,
-    rotation: "horizontal",
-    hits: 0,
-    hasSunk: false,
-  });
-  expect(gameBoard.board["4,3"]).toEqual({
-    length: 4,
-    rotation: "horizontal",
-    hits: 0,
-    hasSunk: false,
-  });
-  expect(gameBoard.board["5,3"]).toEqual({
-    length: 4,
-    rotation: "horizontal",
-    hits: 0,
-    hasSunk: false,
-  });
-  expect(gameBoard.board["6,3"]).toEqual({
-    length: 4,
-    rotation: "horizontal",
-    hits: 0,
-    hasSunk: false,
-  });
+  expect(gameBoard.board["3,3"]).toEqual(new Ship(4));
+  expect(gameBoard.board["4,3"]).toEqual(new Ship(4));
+  expect(gameBoard.board["5,3"]).toEqual(new Ship(4));
+  expect(gameBoard.board["6,3"]).toEqual(new Ship(4));
   // Not overextend
   expect(gameBoard.board["7,3"]).toBeUndefined();
   // Tests if they're to the same reference
   expect(gameBoard.board["3,3"] === gameBoard.board["4,3"]).toBe(true);
 });
+
+test("gameBoard to place Ship vertically at expected coordinates and length", () => {
+  gameBoard.placeShip([3, 3], 4, "vertical");
+  expect(gameBoard.board["3,3"]).toEqual(new Ship(4));
+  expect(gameBoard.board["3,4"]).toEqual(new Ship(4));
+  expect(gameBoard.board["3,5"]).toEqual(new Ship(4));
+  expect(gameBoard.board["3,6"]).toEqual(new Ship(4));
+  // Not overextend
+  expect(gameBoard.board["3,7"]).toBeUndefined();
+  // Tests if they're to the same reference
+  expect(gameBoard.board["3,3"] === gameBoard.board["3,4"]).toBe(true);
+})
