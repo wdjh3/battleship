@@ -87,6 +87,12 @@ test("NOT place ship if collides with another ship", () => {
   expect(gameBoard.placeShip([6, 4], 3, "vertical")).toBe(false);
 })
 
+test("removeShip to remove Ship", () => {
+  gameBoard.placeShip([3, 4], 4, "vertical");
+  gameBoard.removeShip([3, 4]);
+  expect(gameBoard.board).toEqual({});
+})
+
 test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
   const testCases = [
     [3, 11],

@@ -47,6 +47,17 @@ class GameBoard {
     }
   }
 
+  removeShip([x, y]) {
+    const targetShip = this.board[`${x},${y}`];
+    if (targetShip) {
+      for (const key in this.board) {
+        if (this.board[key] === targetShip) {
+          delete this.board[key];
+        }
+      }
+    }
+  }
+
   receiveAttack([x, y]) {
     if (!this.validateCoordinates([x, y]) || this.attacks[`${x},${y}`]) {
       return false;
