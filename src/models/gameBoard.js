@@ -49,13 +49,14 @@ class GameBoard {
 
   removeShip([x, y]) {
     const targetShip = this.board[`${x},${y}`];
-    if (targetShip) {
-      for (const key in this.board) {
-        if (this.board[key] === targetShip) {
-          delete this.board[key];
-        }
-      }
+    if (!targetShip) {
+      return false;
     }
+    for (const key in this.board) {
+      if (this.board[key] === targetShip) {
+        delete this.board[key];
+      }
+    } 
   }
 
   receiveAttack([x, y]) {

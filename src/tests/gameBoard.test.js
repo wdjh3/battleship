@@ -93,6 +93,11 @@ test("removeShip to remove Ship", () => {
   expect(gameBoard.board).toEqual({});
 })
 
+test("removeShip to NOT remove Ship if it doesn't exist", () => {
+  gameBoard.placeShip([3, 4], 4, "vertical");
+  expect(gameBoard.removeShip([4, 4])).toBe(false);
+})
+
 test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
   const testCases = [
     [3, 11],
