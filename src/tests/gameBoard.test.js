@@ -118,3 +118,12 @@ test("receiveAttack() can't attack twice in the same coordinate", () => {
   gameBoard.receiveAttack([1, 1]);
   expect(gameBoard.receiveAttack([1, 1])).toBe(false);
 })
+
+test("areAllShipsSunk() returns correctly", () => {
+  gameBoard.placeShip([3, 4], 3);
+  expect(gameBoard.areAllShipsSunk()).toBe(false);
+  gameBoard.receiveAttack([3, 4]);
+  gameBoard.receiveAttack([4, 4]);
+  gameBoard.receiveAttack([5, 4]);
+  expect(gameBoard.areAllShipsSunk()).toBe(true);
+})

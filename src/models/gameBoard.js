@@ -74,6 +74,15 @@ class GameBoard {
     return true;
   }
 
+  areAllShipsSunk() {
+    for (const key in this.board) {
+      if (this.board[key]?.hasSunk === false) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   validateCoordinates([x, y]) {
     return (
       x >= 0 && x <= gameBoardWidth - 1 && y >= 0 && y <= gameBoardHeight - 1
