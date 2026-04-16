@@ -47,5 +47,38 @@ const gameController = (() => {
     }
   }
 
-  return { getGameState, getPlayers, getShips, placeShip };
+  function init() {
+    uiController.bindConfirmPlacementBtn(confirmPlacement);
+  }
+
+  function confirmPlacement() {
+    debugger;
+    switch (gameState) {
+      case gameStates.PLAYER_1_PLACING:
+        if (player1.gameBoard.areAllShipsPlaced(ships)) {
+          gameState = gameStates.PLAYER_2_PLACING;
+          console.log(gameState);
+          uiController.render(gameState, getPlayers());
+        } else {
+          // Error message saying that all ships must set sail!
+        }
+        break;
+      case gameStates.PLAYER_2_PLACING:
+        if (player2.gameBoard.areAllShipsPlaced(ships)) {
+          gameState = gameStates.PLAYER_1_TURN;
+        } else {
+          // Error message saying that all ships must set sail!
+        }
+        break;
+    }
+  }
+
+  return {
+    getGameState,
+    getPlayers,
+    getShips,
+    placeShip,
+    init,
+    confirmPlacement,
+  };
 })();

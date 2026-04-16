@@ -96,6 +96,24 @@ class GameBoard {
     return true;
   }
 
+  areAllShipsPlaced(ships) {
+    for (const ship of ships) {
+      if (!this.hasShip(ship)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  hasShip(shipObject) {
+    for (const key in this.board) {
+      if (this.board[key] === shipObject) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   validateCoordinates([x, y]) {
     return (
       x >= 0 && x <= gameBoardWidth - 1 && y >= 0 && y <= gameBoardHeight - 1
