@@ -1,6 +1,8 @@
 import { Ship } from "../models/ship.js";
 import { GameBoard } from "../models/gameBoard.js";
 
+const testShip1 = new Ship(4);
+const testShip2 = new Ship(3);
 const gameBoard = new GameBoard();
 
 function resetGameBoard() {
@@ -22,20 +24,20 @@ test("gameBoard to NOT place Ship out of bounds", () => {
   ];
 
   for (const testCase of testCases) {
-    expect(gameBoard.placeShip(testCase, 4, "horizontal")).toBe(false);
+    expect(gameBoard.placeShip(testShip1, testCase, "horizontal")).toBe(false);
   }
 });
 
 test("gameBoard to NOT place Ship length out of bounds", () => {
   const testCases = [
     {
+      ship: testShip1,
       coords: [7, 3],
-      length: 4,
       rotation: "horizontal",
     },
     {
+      ship: testShip1,
       coords: [7, 9],
-      length: 4,
       rotation: "vertical",
     },
   ];
@@ -43,8 +45,8 @@ test("gameBoard to NOT place Ship length out of bounds", () => {
   for (const testCase of testCases) {
     expect(
       gameBoard.placeShip(
+        testCase["ship"],
         testCase["coords"],
-        testCase["length"],
         testCase["rotation"],
       ),
     ).toBe(false);
@@ -52,12 +54,12 @@ test("gameBoard to NOT place Ship length out of bounds", () => {
 });
 
 test("gameBoard to place Ship at expected coordinate", () => {
-  gameBoard.placeShip([3, 3], 4);
+  gameBoard.placeShip(testShip1, [3, 3]);
   expect(gameBoard.board["3,3"]).toEqual(new Ship(4));
 });
 
 test("gameBoard to place Ship at expected coordinates and length", () => {
-  gameBoard.placeShip([3, 3], 4);
+  gameBoard.placeShip(testShip1, [3, 3]);
   expect(gameBoard.board["3,3"]).toEqual(new Ship(4));
   expect(gameBoard.board["4,3"]).toEqual(new Ship(4));
   expect(gameBoard.board["5,3"]).toEqual(new Ship(4));
@@ -69,7 +71,7 @@ test("gameBoard to place Ship at expected coordinates and length", () => {
 });
 
 test("gameBoard to place Ship vertically at expected coordinates and length", () => {
-  gameBoard.placeShip([3, 4], 4, "vertical");
+  gameBoard.placeShip(testShip1, [3, 4], "vertical");
   expect(gameBoard.board["3,4"]).toEqual(new Ship(4));
   expect(gameBoard.board["3,5"]).toEqual(new Ship(4));
   expect(gameBoard.board["3,6"]).toEqual(new Ship(4));
@@ -82,19 +84,19 @@ test("gameBoard to place Ship vertically at expected coordinates and length", ()
 
 test("NOT place ship if collides with another ship", () => {
   // [4/5/6/7/8, 5]
-  gameBoard.placeShip([4, 5], 5, "horizontal");
+  gameBoard.placeShip(testShip1, [4, 5]);
   // [6, 4/5/6], collision on [6, 5]
-  expect(gameBoard.placeShip([6, 4], 3, "vertical")).toBe(false);
+  expect(gameBoard.placeShip(testShip1, [6, 4], "vertical")).toBe(false);
 })
 
 test("removeShip to remove Ship", () => {
-  gameBoard.placeShip([3, 4], 4, "vertical");
+  gameBoard.placeShip(testShip1, [3, 4], "vertical");
   gameBoard.removeShip([3, 4]);
   expect(gameBoard.board).toEqual({});
 })
 
 test("removeShip to NOT remove Ship if it doesn't exist", () => {
-  gameBoard.placeShip([3, 4], 4, "vertical");
+  gameBoard.placeShip(testShip1, [3, 4], "vertical");
   expect(gameBoard.removeShip([4, 4])).toBe(false);
 })
 
@@ -112,7 +114,7 @@ test("gameBoard's receiveAttack() to not accept invalid coordinates", () => {
 });
 
 test("receiveAttack() increases Ship's hit count", () => {
-  gameBoard.placeShip([3, 3], 4);
+  gameBoard.placeShip(testShip1, [3, 3]);
   gameBoard.receiveAttack([3, 3]);
   expect(gameBoard.board["3,3"]).toEqual({length: 4, hits: 1, hasSunk: false});
   gameBoard.receiveAttack([4, 3]);
@@ -125,7 +127,7 @@ test("receiveAttack() can't attack twice in the same coordinate", () => {
 })
 
 test("areAllShipsSunk() returns correctly", () => {
-  gameBoard.placeShip([3, 4], 3);
+  gameBoard.placeShip(testShip2, [3, 4]);
   expect(gameBoard.areAllShipsSunk()).toBe(false);
   gameBoard.receiveAttack([3, 4]);
   gameBoard.receiveAttack([4, 4]);

@@ -10,27 +10,24 @@ class GameBoard {
     this.attacks = {};
   }
 
-  placeShip([x, y], length, rotation = "horizontal") {
+  placeShip(shipObject, [x, y], rotation = "horizontal") {
     if (!this.validateCoordinates([x, y])) {
-      // console.log("Invalid Coordinates: Out of bounds");
       return false;
     }
-
     const coords = [];
-    const newShip = new Ship(length);
 
     if (rotation === "horizontal") {
-      if (!this.validateCoordinates([x + length - 1, y])) {
+      if (!this.validateCoordinates([x + shipObject.length - 1, y])) {
         return false;
       }
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < shipObject.length; i++) {
         coords.push(`${x + i},${y}`);
       }
     } else if (rotation === "vertical") {
-      if (!this.validateCoordinates([x, y + length - 1])) {
+      if (!this.validateCoordinates([x, y + shipObject.length - 1])) {
         return false;
       }
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < shipObject.length; i++) {
         coords.push(`${x},${y + i}`);
       }
     }
@@ -43,7 +40,7 @@ class GameBoard {
     }
 
     for (const coord of coords) {
-      this.board[coord] = newShip;
+      this.board[coord] = shipObject;
     }
   }
 
