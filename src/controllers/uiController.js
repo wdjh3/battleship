@@ -23,6 +23,9 @@ const uiController = (() => {
         hideShips(player1GameBoard);
         renderShips(player2GameBoard, players[1].gameBoard.board);
         break;
+      case gameStates.PLAYER_1_TURN:
+        hideShips(player2GameBoard);
+        break;
     }
   }
 

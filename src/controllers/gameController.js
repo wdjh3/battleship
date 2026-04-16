@@ -57,7 +57,6 @@ const gameController = (() => {
       case gameStates.PLAYER_1_PLACING:
         if (player1.gameBoard.areAllShipsPlaced(ships)) {
           gameState = gameStates.PLAYER_2_PLACING;
-          console.log(gameState);
           uiController.render(gameState, getPlayers());
         } else {
           // Error message saying that all ships must set sail!
@@ -66,6 +65,7 @@ const gameController = (() => {
       case gameStates.PLAYER_2_PLACING:
         if (player2.gameBoard.areAllShipsPlaced(ships)) {
           gameState = gameStates.PLAYER_1_TURN;
+          uiController.render(gameState, getPlayers());
         } else {
           // Error message saying that all ships must set sail!
         }

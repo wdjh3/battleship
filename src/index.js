@@ -14,5 +14,11 @@ function testFunction() {
   gameController.placeShip(gameController.getShips()[2], [6,7]);
   gameController.placeShip(gameController.getShips()[3], [9,3]);
   gameController.placeShip(gameController.getShips()[4], [5,4], "horizontal");
+  gameController.confirmPlacement();
+  gameController.placeShip(gameController.getShips()[0], [4,9], "horizontal");
+  gameController.placeShip(gameController.getShips()[1], [1,7], "horizontal");
+  gameController.placeShip(gameController.getShips()[2], [0,0]);
+  gameController.placeShip(gameController.getShips()[3], [7,1], "horizontal");
+  gameController.placeShip(gameController.getShips()[4], [8,6]);
 }
 testFunction();
