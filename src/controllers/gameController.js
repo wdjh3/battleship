@@ -1,3 +1,4 @@
+import { gameBoardWidth } from "../models/gameBoard.js";
 import { Player } from "../models/player.js";
 import { Ship } from "../models/ship.js";
 import { uiController } from "./uiController.js";
@@ -35,20 +36,55 @@ const gameController = (() => {
   }
 
   function placeShip(shipObject, [x, y], rotation = "vertical") {
+    // TODO: Fix actually returning success state
     switch (gameState) {
       case "PLAYER_1_PLACING":
         player1.gameBoard.placeShip(shipObject, [x, y], rotation);
         uiController.render(gameState, this.getPlayers());
         return true;
+        break;
       case "PLAYER_2_PLACING":
         player2.gameBoard.placeShip(shipObject, [x, y], rotation);
         uiController.render(gameState, this.getPlayers());
         return true;
+        break;
+    }
+  }
+
+  function receiveAttack(index) {
+    const coords = [index % gameBoardWidth, Math.floor(index / gameBoardWidth)]
+    switch (gameState) {
+      case gameStates.PLAYER_1_TURN:
+        if (player2.gameBoard.receiveAttack(coords)) {
+          gameState = gameStates.PLAYER_2_TURN;
+          uiController.render(gameState, getPlayers());
+          return true;
+        }
+        return false;
+        break;
+      case gameStates.PLAYER_2_TURN:
+        if (player1.gameBoard.receiveAttack(coords)) {
+          gameState = gameStates.PLAYER_1_TURN;
+          uiController.render(gameState, getPlayers());
+          return true;
+        }
+        return false;
+        break;
     }
   }
 
   function init() {
     uiController.bindConfirmPlacementBtn(confirmPlacement);
+    uiController.bindGameBoardListener(e => {
+      if (e.target.classList.contains("grid-cell")) {
+        if (gameState === gameStates.PLAYER_1_TURN && e.target.closest(".gameboard").id === "player1-gameboard") {
+          return;
+        } else if (gameState === gameStates.PLAYER_2_TURN && e.target.closest(".gameboard").id === "player2-gameboard") {
+          return;
+        }
+        receiveAttack(Number(e.target.dataset.index));
+      }
+    })
   }
 
   function confirmPlacement() {

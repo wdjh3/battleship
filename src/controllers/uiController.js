@@ -13,22 +13,27 @@ const shipSelectionElement = document.getElementById("ship-selection");
 const uiController = (() => {
   function start() {
     addCellsToGrid();
-    addGameBoardListener();
   }
 
   function render(gameState, players) {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
         shipSelectionElement.style.display = "flex";
+        updateMessage(`It's ${players[0].name}'s turn to place ships!`);
         renderShips(player1GameBoard, players[0].gameBoard.board);
         break;
       case gameStates.PLAYER_2_PLACING:
         hideShips(player1GameBoard);
+        updateMessage(`It's ${players[1].name}'s turn to place ships!`);
         renderShips(player2GameBoard, players[1].gameBoard.board);
         break;
       case gameStates.PLAYER_1_TURN:
         hideShips(player2GameBoard);
+        updateMessage(`It's ${players[0].name}'s turn!`);
         shipSelectionElement.style.display = "none";
+        break;
+      case gameStates.PLAYER_2_TURN:
+        updateMessage(`It's ${players[1].name}'s turn!`);
         break;
     }
   }
@@ -41,7 +46,22 @@ const uiController = (() => {
     confirmPlacementBtn.addEventListener("click", callback);
   }
 
-  return { start, render, updateErrorMessage, bindConfirmPlacementBtn };
+  // Maybe switch to Pub/Sub?
+  function bindGameBoardListener(callback) {
+    for (const gameBoardNode of gameBoardNodeList) {
+      gameBoardNode.addEventListener("click", (e) => {
+        callback(e);
+      });
+    }
+  }
+
+  return {
+    start,
+    render,
+    updateErrorMessage,
+    bindConfirmPlacementBtn,
+    bindGameBoardListener,
+  };
 })();
 
 function addCellsToGrid() {
@@ -56,20 +76,8 @@ function addCellsToGrid() {
   }
 }
 
-function addGameBoardListener() {
-  for (const gameBoardNode of gameBoardNodeList) {
-    gameBoardNode.addEventListener("click", (e) => {
-      if (e.target.classList.contains("grid-cell")) {
-        console.log(e.target.closest(".gameboard").id);
-        console.log(e.target);
-      }
-    });
-  }
-}
-
-function updateMessage(gameState, player1Name, player2Name) {
-  if (gameState === gameStates.PLAYER_1_PLACING) {
-  }
+function updateMessage(message) {
+  messageElement.textContent = message;
 }
 
 function renderShips(gameBoardElement, board) {
