@@ -39,9 +39,11 @@ const gameController = (() => {
       case "PLAYER_1_PLACING":
         player1.gameBoard.placeShip(shipObject, [x, y], rotation);
         uiController.render(gameState, this.getPlayers());
+        return true;
       case "PLAYER_2_PLACING":
         player2.gameBoard.placeShip(shipObject, [x, y], rotation);
         uiController.render(gameState, this.getPlayers());
+        return true;
     }
   }
 
