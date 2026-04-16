@@ -109,6 +109,7 @@ const gameController = (() => {
         receiveAttack(Number(e.target.dataset.index));
       }
     });
+    uiController.bindNewGameBtn(newGame);
   }
 
   function confirmPlacement() {
@@ -134,6 +135,25 @@ const gameController = (() => {
     }
   }
 
+  function newGame() {
+    debugger;
+    uiController.reset();
+    player1.gameBoard.clearBoard();
+    player2.gameBoard.clearBoard();
+    resetShips();
+    gameState = gameStates.PLAYER_1_PLACING;
+    uiController.render(gameState, getPlayers());
+  }
+
+  function resetShips() {
+    const playersShips = [player1Ships, player2Ships];
+    for (const ships of playersShips) {
+      for (const ship of ships) {
+        ship.reset();
+      }
+    }
+  }
+
   return {
     getGameState,
     getPlayers,
@@ -142,5 +162,6 @@ const gameController = (() => {
     init,
     receiveAttack, // TODO: Delete after testing
     confirmPlacement,
+    newGame,
   };
 })();

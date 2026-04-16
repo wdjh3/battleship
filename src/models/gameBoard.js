@@ -119,6 +119,11 @@ class GameBoard {
       x >= 0 && x <= gameBoardWidth - 1 && y >= 0 && y <= gameBoardHeight - 1
     );
   }
+
+  clearBoard() {
+    this.board = {};
+    this.attacks = {};
+  }
 }
 
 class Attack {

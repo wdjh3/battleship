@@ -168,11 +168,14 @@ header {
   padding: 1vh 5vh;
 }
 
-.selections > button.confirm-placement {
+.btn {
   border: none;
   font-size: 2rem;
-  background-color: #4c8c00;
   border-radius: 0.5rem;
+}
+
+.selections > button.confirm-placement {
+  background-color: #4c8c00;
   margin: 0 25vw;
 }
 
@@ -186,4 +189,24 @@ header {
   font-size: 2rem;
   background-color: #134900;
   cursor: pointer;
+}
+
+.new-game-btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+button.new-game {
+  background-color: #aa4a44;
+  margin: 2rem 25vw;
+}
+
+button.new-game:hover {
+  background-color: #ea85aa;
+  margin: 2rem 25vw;
+  cursor: pointer;
+}
+
+button.new-game:active {
+  background-color: #702827;
 }

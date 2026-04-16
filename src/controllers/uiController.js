@@ -10,6 +10,7 @@ const player1GameBoard = document.getElementById("player1-gameboard");
 const player2GameBoard = document.getElementById("player2-gameboard");
 const confirmPlacementBtn = document.getElementById("confirm-placement-btn");
 const shipSelectionElement = document.getElementById("ship-selection");
+const newGameBtn = document.getElementById("new-game");
 
 const uiController = (() => {
   function start() {
@@ -19,6 +20,8 @@ const uiController = (() => {
   function render(gameState, players) {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
+        renderAttacks(players);
+        newGameBtn.hidden = true;
         shipSelectionElement.style.display = "flex";
         updateMessage(`It's ${players[0].name}'s turn to place ships!`);
         renderShips(player1GameBoard, players[0].gameBoard.board);
@@ -41,6 +44,7 @@ const uiController = (() => {
       case gameStates.GAME_OVER:
         renderAttacks(players);
         updateMessage("Game Over!");
+        newGameBtn.hidden = false;
         break;
     }
   }
@@ -57,6 +61,10 @@ const uiController = (() => {
     confirmPlacementBtn.addEventListener("click", callback);
   }
 
+  function bindNewGameBtn(callback) {
+    newGameBtn.addEventListener('click', callback)
+  }
+
   // Maybe switch to Pub/Sub?
   function bindGameBoardListener(callback) {
     for (const gameBoardNode of gameBoardNodeList) {
@@ -66,13 +74,23 @@ const uiController = (() => {
     }
   }
 
+  function reset() {
+    winnerMessageElement.textContent = "";
+    for (const gameBoardNode of gameBoardNodeList) {
+      gameBoardNode.innerHTML = "";
+    }
+    start();
+  }
+
   return {
     start,
     render,
     updateErrorMessage,
     updateWinnerMessage,
     bindConfirmPlacementBtn,
+    bindNewGameBtn,
     bindGameBoardListener,
+    reset,
   };
 })();
 
