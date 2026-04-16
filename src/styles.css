@@ -113,6 +113,12 @@ header {
   cursor: pointer;
 }
 
+.grid-cell.ship {
+  background-color: #758da3;
+  border-radius: 22%;
+  margin: 5%;
+}
+
 .separator {
   width: 8px;
   border-left: 2px solid white;
