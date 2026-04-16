@@ -13,10 +13,13 @@ const gameStates = Object.freeze({
 });
 
 const gameController = (() => {
+  let winner;
   const shipLengths = [5, 4, 3, 3, 2];
-  const ships = [];
+  const player1Ships = [];
+  const player2Ships = [];
   for (const shipLength of shipLengths) {
-    ships.push(new Ship(shipLength));
+    player1Ships.push(new Ship(shipLength));
+    player2Ships.push(new Ship(shipLength));
   }
 
   let gameState = gameStates.PLAYER_1_PLACING;
@@ -32,7 +35,11 @@ const gameController = (() => {
   }
 
   function getShips() {
-    return ships;
+    if (gameState === gameStates.PLAYER_1_PLACING) {
+      return player1Ships;
+    } else if (gameState === gameStates.PLAYER_2_PLACING) {
+      return player2Ships;
+    }
   }
 
   function placeShip(shipObject, [x, y], rotation = "vertical") {
@@ -56,6 +63,13 @@ const gameController = (() => {
     switch (gameState) {
       case gameStates.PLAYER_1_TURN:
         if (player2.gameBoard.receiveAttack(coords)) {
+          if (player2.gameBoard.areAllShipsSunk()) {
+            winner = player1;
+            gameState = gameStates.GAME_OVER;
+            uiController.render(gameState, getPlayers());
+            uiController.updateWinnerMessage(winner);
+            return;
+          }
           gameState = gameStates.PLAYER_2_TURN;
           uiController.render(gameState, getPlayers());
           return true;
@@ -64,6 +78,13 @@ const gameController = (() => {
         break;
       case gameStates.PLAYER_2_TURN:
         if (player1.gameBoard.receiveAttack(coords)) {
+          if (player1.gameBoard.areAllShipsSunk()) {
+            winner = player2;
+            gameState = gameStates.GAME_OVER;
+            uiController.render(gameState, getPlayers());
+            uiController.updateWinnerMessage(winner);
+            return;
+          }
           gameState = gameStates.PLAYER_1_TURN;
           uiController.render(gameState, getPlayers());
           return true;
@@ -93,7 +114,7 @@ const gameController = (() => {
   function confirmPlacement() {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
-        if (player1.gameBoard.areAllShipsPlaced(ships)) {
+        if (player1.gameBoard.areAllShipsPlaced(player1Ships)) {
           gameState = gameStates.PLAYER_2_PLACING;
           uiController.render(gameState, getPlayers());
           uiController.updateErrorMessage("");
@@ -102,7 +123,7 @@ const gameController = (() => {
         }
         break;
       case gameStates.PLAYER_2_PLACING:
-        if (player2.gameBoard.areAllShipsPlaced(ships)) {
+        if (player2.gameBoard.areAllShipsPlaced(player2Ships)) {
           gameState = gameStates.PLAYER_1_TURN;
           uiController.render(gameState, getPlayers());
           uiController.updateErrorMessage("");
@@ -119,6 +140,7 @@ const gameController = (() => {
     getShips,
     placeShip,
     init,
+    receiveAttack, // TODO: Delete after testing
     confirmPlacement,
   };
 })();

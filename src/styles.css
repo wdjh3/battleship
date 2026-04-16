@@ -65,6 +65,12 @@ body {
   text-align: center;
 }
 
+.winner-message {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
 .error-message {
   color: red;
   font-size: 4rem;
@@ -117,8 +123,7 @@ header {
 }
 
 .grid-cell.hit {
-  background-color: black;
-  color: #ff5a00;
+  background-color: maroon;
 }
 
 .hit-icon {
