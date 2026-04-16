@@ -52,7 +52,7 @@ const gameController = (() => {
   }
 
   function receiveAttack(index) {
-    const coords = [index % gameBoardWidth, Math.floor(index / gameBoardWidth)]
+    const coords = [index % gameBoardWidth, Math.floor(index / gameBoardWidth)];
     switch (gameState) {
       case gameStates.PLAYER_1_TURN:
         if (player2.gameBoard.receiveAttack(coords)) {
@@ -75,16 +75,19 @@ const gameController = (() => {
 
   function init() {
     uiController.bindConfirmPlacementBtn(confirmPlacement);
-    uiController.bindGameBoardListener(e => {
+    uiController.bindGameBoardListener((e) => {
       if (e.target.classList.contains("grid-cell")) {
-        if (gameState === gameStates.PLAYER_1_TURN && e.target.closest(".gameboard").id === "player1-gameboard") {
-          return;
-        } else if (gameState === gameStates.PLAYER_2_TURN && e.target.closest(".gameboard").id === "player2-gameboard") {
+        if (
+          (gameState === gameStates.PLAYER_1_TURN &&
+            e.target.closest(".gameboard").id === "player1-gameboard") ||
+          (gameState === gameStates.PLAYER_2_TURN &&
+            e.target.closest(".gameboard").id === "player2-gameboard")
+        ) {
           return;
         }
         receiveAttack(Number(e.target.dataset.index));
       }
-    })
+    });
   }
 
   function confirmPlacement() {
@@ -93,18 +96,18 @@ const gameController = (() => {
         if (player1.gameBoard.areAllShipsPlaced(ships)) {
           gameState = gameStates.PLAYER_2_PLACING;
           uiController.render(gameState, getPlayers());
-          uiController.updateErrorMessage("")
+          uiController.updateErrorMessage("");
         } else {
-          uiController.updateErrorMessage("ALL SHIPS MUST SAIL!")
+          uiController.updateErrorMessage("ALL SHIPS MUST SAIL!");
         }
         break;
       case gameStates.PLAYER_2_PLACING:
         if (player2.gameBoard.areAllShipsPlaced(ships)) {
           gameState = gameStates.PLAYER_1_TURN;
           uiController.render(gameState, getPlayers());
-          uiController.updateErrorMessage("")
+          uiController.updateErrorMessage("");
         } else {
-          uiController.updateErrorMessage("ALL SHIPS MUST SAIL!")
+          uiController.updateErrorMessage("ALL SHIPS MUST SAIL!");
         }
         break;
     }
