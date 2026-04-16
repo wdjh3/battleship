@@ -83,16 +83,62 @@ test("gameBoard to place Ship vertically at expected coordinates and length", ()
 })
 
 test("NOT place ship if collides with another ship", () => {
-  // [4/5/6/7/8, 5]
+  // [4/5/6/7, 5]
   gameBoard.placeShip(testShip1, [4, 5]);
   // [6, 4/5/6], collision on [6, 5]
-  expect(gameBoard.placeShip(testShip1, [6, 4], "vertical")).toBe(false);
+  expect(gameBoard.placeShip(testShip2, [6, 4], "vertical")).toBe(false);
 })
 
-test("removeShip to remove Ship", () => {
-  gameBoard.placeShip(testShip1, [3, 4], "vertical");
-  gameBoard.removeShip([3, 4]);
-  expect(gameBoard.board).toEqual({});
+test("placeShip() to move Ship if it is on the board (happy path)", () => {
+  gameBoard.placeShip(testShip1, [2, 3]);
+  const resultBoard = JSON.parse(JSON.stringify(gameBoard.board));
+  resetGameBoard();
+
+  gameBoard.placeShip(testShip1, [3, 4]);
+  gameBoard.placeShip(testShip1, [2, 3]);
+  expect(JSON.parse(JSON.stringify(gameBoard.board))).toEqual(resultBoard);
+})
+
+test("placeShip() to move Ship if the overlapping ship is the same ship", () => {
+  gameBoard.placeShip(testShip1, [4, 4], "vertical");
+  const resultBoard = JSON.parse(JSON.stringify(gameBoard.board));
+  resetGameBoard();
+
+  gameBoard.placeShip(testShip1, [3, 4]);
+  gameBoard.placeShip(testShip1, [4, 4], "vertical");
+  expect(JSON.parse(JSON.stringify(gameBoard.board))).toEqual(resultBoard);
+})
+
+test("placeShip() to NOT move Ship if new position out of bounds", () => {
+  gameBoard.placeShip(testShip1, [2, 3]);
+  const resultBoard = JSON.parse(JSON.stringify(gameBoard.board));
+  resetGameBoard();
+
+  gameBoard.placeShip(testShip1, [2, 3]);
+  gameBoard.placeShip(testShip1, [3, 11]);
+  expect(JSON.parse(JSON.stringify(gameBoard.board))).toEqual(resultBoard);
+})
+
+test("placeShip() to NOT move Ship if new position length out of bounds", () => {
+  gameBoard.placeShip(testShip1, [2, 3]);
+  const resultBoard = JSON.parse(JSON.stringify(gameBoard.board));
+  resetGameBoard();
+
+  gameBoard.placeShip(testShip1, [2, 3]);
+  gameBoard.placeShip(testShip1, [7, 3]);
+  expect(JSON.parse(JSON.stringify(gameBoard.board))).toEqual(resultBoard);
+})
+
+test("placeShip() to NOT move Ship if new position overlaps other Ships", () => {
+  gameBoard.placeShip(testShip2, [4, 5], "vertical");
+  gameBoard.placeShip(testShip1, [2, 3]);
+  const resultBoard = JSON.parse(JSON.stringify(gameBoard.board));
+  resetGameBoard();
+
+  gameBoard.placeShip(testShip1, [2, 3]);
+  gameBoard.placeShip(testShip2, [4, 5], "vertical");
+  gameBoard.placeShip(testShip1, [2, 6]);
+  expect(JSON.parse(JSON.stringify(gameBoard.board))).toEqual(resultBoard);
 })
 
 test("removeShip to remove Ship", () => {

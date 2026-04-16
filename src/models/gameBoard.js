@@ -1,5 +1,5 @@
 import { Ship } from "./ship.js";
-export { GameBoard };
+export { gameBoardWidth, gameBoardHeight, GameBoard };
 
 const gameBoardWidth = 10;
 const gameBoardHeight = 10;
@@ -15,6 +15,7 @@ class GameBoard {
       return false;
     }
     const coords = [];
+    const prevCoords = this.findShip(shipObject);
 
     if (rotation === "horizontal") {
       if (!this.validateCoordinates([x + shipObject.length - 1, y])) {
@@ -32,9 +33,17 @@ class GameBoard {
       }
     }
 
+    if (prevCoords.length !== 0) {
+      // Ship has been placed
+      this.removeShip(shipObject);
+    }
+
     // Check if space if occupied by another ship
     for (const coord of coords) {
       if (this.board[coord]) {
+        for (const prevCoord of prevCoords) {
+          this.board[prevCoord] = shipObject;
+        }
         return false;
       }
     }
@@ -44,11 +53,16 @@ class GameBoard {
     }
   }
 
-  removeShip([x, y]) {
-    const targetShip = this.board[`${x},${y}`];
-    if (!targetShip) {
-      return false;
+  findShip(shipObject) {
+    const coords = [];
+    for (const key in this.board) {
+      if (this.board[key] === shipObject) {
+        coords.push(key);
+      }
     }
+    return coords;
+  }
+
   removeShip(shipObject) {
     for (const key in this.board) {
       if (this.board[key] === shipObject) {
