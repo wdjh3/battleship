@@ -7,6 +7,7 @@ const gameBoardNodeList = document.querySelectorAll(".gameboard");
 const player1GameBoard = document.getElementById("player1-gameboard");
 const player2GameBoard = document.getElementById("player2-gameboard");
 const confirmPlacementBtn = document.getElementById("confirm-placement-btn");
+const shipSelectionElement = document.getElementById("ship-selection");
 
 const uiController = (() => {
   function start() {
@@ -17,6 +18,7 @@ const uiController = (() => {
   function render(gameState, players) {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
+        shipSelectionElement.style.display = "flex";
         renderShips(player1GameBoard, players[0].gameBoard.board);
         break;
       case gameStates.PLAYER_2_PLACING:
@@ -25,6 +27,7 @@ const uiController = (() => {
         break;
       case gameStates.PLAYER_1_TURN:
         hideShips(player2GameBoard);
+        shipSelectionElement.style.display = "none";
         break;
     }
   }
