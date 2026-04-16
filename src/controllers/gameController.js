@@ -52,22 +52,23 @@ const gameController = (() => {
   }
 
   function confirmPlacement() {
-    debugger;
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
         if (player1.gameBoard.areAllShipsPlaced(ships)) {
           gameState = gameStates.PLAYER_2_PLACING;
           uiController.render(gameState, getPlayers());
+          uiController.updateErrorMessage("")
         } else {
-          // Error message saying that all ships must set sail!
+          uiController.updateErrorMessage("ALL SHIPS MUST SAIL!")
         }
         break;
       case gameStates.PLAYER_2_PLACING:
         if (player2.gameBoard.areAllShipsPlaced(ships)) {
           gameState = gameStates.PLAYER_1_TURN;
           uiController.render(gameState, getPlayers());
+          uiController.updateErrorMessage("")
         } else {
-          // Error message saying that all ships must set sail!
+          uiController.updateErrorMessage("ALL SHIPS MUST SAIL!")
         }
         break;
     }

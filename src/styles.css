@@ -61,6 +61,12 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 
+.error-message {
+  color: red;
+  font-size: 4rem;
+  text-align: center;
+}
+
 header {
   display: flex;
   flex-direction: row;

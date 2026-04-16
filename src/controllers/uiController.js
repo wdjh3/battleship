@@ -3,6 +3,7 @@ import { gameBoardWidth, gameBoardHeight } from "../models/gameBoard.js";
 import { gameStates } from "./gameController.js";
 
 const messageElement = document.getElementById("message");
+const errorMessageElement = document.getElementById("error-message");
 const gameBoardNodeList = document.querySelectorAll(".gameboard");
 const player1GameBoard = document.getElementById("player1-gameboard");
 const player2GameBoard = document.getElementById("player2-gameboard");
@@ -32,11 +33,15 @@ const uiController = (() => {
     }
   }
 
+  function updateErrorMessage(error) {
+    errorMessageElement.textContent = error;
+  }
+
   function bindConfirmPlacementBtn(callback) {
     confirmPlacementBtn.addEventListener("click", callback);
   }
 
-  return { start, render, bindConfirmPlacementBtn };
+  return { start, render, updateErrorMessage, bindConfirmPlacementBtn };
 })();
 
 function addCellsToGrid() {
