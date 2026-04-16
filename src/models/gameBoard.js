@@ -49,11 +49,12 @@ class GameBoard {
     if (!targetShip) {
       return false;
     }
+  removeShip(shipObject) {
     for (const key in this.board) {
-      if (this.board[key] === targetShip) {
+      if (this.board[key] === shipObject) {
         delete this.board[key];
       }
-    } 
+    }
   }
 
   receiveAttack([x, y]) {
