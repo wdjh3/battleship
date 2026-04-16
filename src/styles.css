@@ -111,6 +111,22 @@ header {
 .grid-cell {
   border: 1px solid black;
   background-color: #022658;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-cell.hit {
+  background-color: black;
+  color: #ff5a00;
+}
+
+.hit-icon {
+  font-size: 2rem;
+}
+
+.grid-cell.miss {
+  background-color: #0e87cc;
 }
 
 .grid-cell:hover {
