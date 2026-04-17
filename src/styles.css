@@ -174,21 +174,41 @@ header {
   border-radius: 0.5rem;
 }
 
-.selections > button.confirm-placement {
-  background-color: #4c8c00;
+.selections > .button-menu {
   margin: 0 25vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.selections > button.confirm-placement:hover {
+.selections button.confirm-placement {
+  background-color: #4c8c00;
+}
+
+.selections button.confirm-placement:hover {
   background-color: #58c02e;
   cursor: pointer;
 }
 
-.selections > button.confirm-placement:active {
+.selections button.confirm-placement:active {
   border: none;
   font-size: 2rem;
   background-color: #134900;
   cursor: pointer;
+}
+
+button.vs-ai {
+  background-color: #d1633b;
+}
+
+button.vs-ai:hover {
+  background-color: #ffbfa8;
+  cursor: pointer;
+}
+
+button.vs-ai:active {
+  background-color: #5c3121;
+  color: white;
 }
 
 .new-game-btn-container {

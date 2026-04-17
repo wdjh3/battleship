@@ -9,6 +9,7 @@ const gameBoardNodeList = document.querySelectorAll(".gameboard");
 const player1GameBoard = document.getElementById("player1-gameboard");
 const player2GameBoard = document.getElementById("player2-gameboard");
 const confirmPlacementBtn = document.getElementById("confirm-placement-btn");
+const vsAiBtn = document.getElementById("vs-ai-btn");
 const shipSelectionElement = document.getElementById("ship-selection");
 const newGameBtn = document.getElementById("new-game");
 
@@ -21,12 +22,14 @@ const uiController = (() => {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
         renderAttacks(players);
+        vsAiBtn.hidden = false;
         newGameBtn.hidden = true;
         shipSelectionElement.style.display = "flex";
         updateMessage(`It's ${players[0].name}'s turn to place ships!`);
         renderShips(player1GameBoard, players[0].gameBoard.board);
         break;
       case gameStates.PLAYER_2_PLACING:
+        vsAiBtn.hidden = true;
         hideShips(player1GameBoard);
         updateMessage(`It's ${players[1].name}'s turn to place ships!`);
         renderShips(player2GameBoard, players[1].gameBoard.board);
@@ -62,7 +65,7 @@ const uiController = (() => {
   }
 
   function bindNewGameBtn(callback) {
-    newGameBtn.addEventListener('click', callback)
+    newGameBtn.addEventListener("click", callback);
   }
 
   // Maybe switch to Pub/Sub?
