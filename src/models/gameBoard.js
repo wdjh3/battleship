@@ -51,6 +51,7 @@ class GameBoard {
     for (const coord of coords) {
       this.board[coord] = shipObject;
     }
+    return true;
   }
 
   findShip(shipObject) {

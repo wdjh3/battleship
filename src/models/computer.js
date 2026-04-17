@@ -4,6 +4,7 @@ export { Computer };
 class Computer {
   constructor(name) {
     this.name = name;
+    this.shots = new Set();
     this.gameBoard = new GameBoard();
   }
 
@@ -13,9 +14,19 @@ class Computer {
         const coords = this.#randomCoords();
         const rotation = this.#randomRotation();
         console.log("trying to position ship with length " + ship.length + " at " + coords + " rotated " + rotation); 
-        this.gameBoard.placeShip(ship, coords, rotation);
+        if (this.gameBoard.placeShip(ship, coords, rotation)) {
+          console.log("successful");
+        };
       }
     }
+  }
+
+  sendAttackTarget() {
+    return this.#randomCoords();
+  }
+
+  receiveAttackStatus(attack) {
+    this.shots.add(attack);
   }
 
   #randomCoords() {

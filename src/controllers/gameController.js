@@ -37,6 +37,10 @@ const gameController = (() => {
   const aiPlayer = new Computer("AI");
   let player2 = humanPlayer2;
 
+  function getGameMode() {
+    return gameMode;
+  }
+
   function getGameState() {
     return gameState;
   }
@@ -81,7 +85,11 @@ const gameController = (() => {
             uiController.updateWinnerMessage(winner);
             return;
           }
-          gameState = gameStates.PLAYER_2_TURN;
+          if ((gameMode === gameModes.PvP)) {
+            gameState = gameStates.PLAYER_2_TURN;
+          } else if ((gameMode === gameModes.PvAI)) {
+            aiTurn();
+          }
           uiController.render(gameState, getPlayers());
           return true;
         }
@@ -103,6 +111,23 @@ const gameController = (() => {
         return false;
         break;
     }
+  }
+
+  function aiTurn() {
+    gameState = gameStates.AI_TURN;
+    uiController.render(gameState, getPlayers());
+    let target = player2.sendAttackTarget();
+    while(!player1.gameBoard.receiveAttack(target)){
+      target = player2.sendAttackTarget();
+    };
+    if (player1.gameBoard.areAllShipsSunk()) {
+      winner = player2;
+      gameState = gameStates.GAME_OVER;
+      uiController.render(gameState, getPlayers());
+      uiController.updateWinnerMessage(winner);
+      return;
+    }
+    gameState = gameStates.PLAYER_1_TURN;
   }
 
   function init() {
@@ -150,15 +175,21 @@ const gameController = (() => {
 
   function vsAiMode() {
     if (player1.gameBoard.areAllShipsPlaced(player1Ships)) {
-      gameMode = gameModes.PvAI;
-      gameState = gameStates.AI_PLACING;
-      player2 = aiPlayer;
-      uiController.render(gameState, getPlayers());
-      player2.placeShips(player2Ships);
-      uiController.updateErrorMessage("");
+      startAiGame();
     } else {
       uiController.updateErrorMessage("ALL SHIPS MUST SAIL!");
     }
+  }
+
+  function startAiGame() {
+    uiController.updateErrorMessage("");
+    gameMode = gameModes.PvAI;
+    gameState = gameStates.AI_PLACING;
+    player2 = aiPlayer;
+    uiController.render(gameState, getPlayers());
+    player2.placeShips(player2Ships);
+    gameState = gameStates.PLAYER_1_TURN;
+    uiController.render(gameState, getPlayers());
   }
 
   function newGame() {
@@ -180,6 +211,7 @@ const gameController = (() => {
   }
 
   return {
+    getGameMode,
     getGameState,
     getPlayers,
     getShips,

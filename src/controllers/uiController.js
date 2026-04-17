@@ -39,6 +39,7 @@ const uiController = (() => {
         shipSelectionElement.style.display = "none";
         hideShips(player1GameBoard);
         updateMessage(`It's ${players[1].name}'s turn to place ships!`);
+        renderShips(player2GameBoard, players[1].gameBoard.board);
         break;
       case gameStates.PLAYER_1_TURN:
         hideShips(player2GameBoard);
@@ -47,6 +48,10 @@ const uiController = (() => {
         shipSelectionElement.style.display = "none";
         break;
       case gameStates.PLAYER_2_TURN:
+        renderAttacks(players);
+        updateMessage(`It's ${players[1].name}'s turn!`);
+        break;
+      case gameStates.AI_TURN:
         renderAttacks(players);
         updateMessage(`It's ${players[1].name}'s turn!`);
         break;
