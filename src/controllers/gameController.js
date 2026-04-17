@@ -18,7 +18,7 @@ const gameStates = Object.freeze({
 const gameModes = Object.freeze({
   PvP: "PvP",
   PvAI: "PvAI",
-})
+});
 
 const gameController = (() => {
   let winner;
@@ -33,7 +33,9 @@ const gameController = (() => {
   let gameMode = gameModes.PvP;
   let gameState = gameStates.PLAYER_1_PLACING;
   const player1 = new Player("Player 1");
-  let player2 = new Player("Player 2");
+  const humanPlayer2 = new Player("Player 2");
+  const aiPlayer = new Computer("AI");
+  let player2 = humanPlayer2;
 
   function getGameState() {
     return gameState;
@@ -147,15 +149,19 @@ const gameController = (() => {
   }
 
   function vsAiMode() {
-    gameMode = gameModes.PvAI;
-    gameState = gameStates.AI_PLACING;
-    player2 = new Computer("AI");
-    uiController.render(gameState, getPlayers());
-    // player2.placeShips(player2Ships);
+    if (player1.gameBoard.areAllShipsPlaced(player1Ships)) {
+      gameMode = gameModes.PvAI;
+      gameState = gameStates.AI_PLACING;
+      player2 = aiPlayer;
+      uiController.render(gameState, getPlayers());
+      player2.placeShips(player2Ships);
+      uiController.updateErrorMessage("");
+    } else {
+      uiController.updateErrorMessage("ALL SHIPS MUST SAIL!");
+    }
   }
 
   function newGame() {
-    debugger;
     uiController.reset();
     player1.gameBoard.clearBoard();
     player2.gameBoard.clearBoard();
