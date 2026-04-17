@@ -1,5 +1,6 @@
 import { gameBoardWidth } from "../models/gameBoard.js";
 import { Player } from "../models/player.js";
+import { Computer } from "../models/computer.js";
 import { Ship } from "../models/ship.js";
 import { uiController } from "./uiController.js";
 export { gameStates, gameController };
@@ -7,10 +8,17 @@ export { gameStates, gameController };
 const gameStates = Object.freeze({
   PLAYER_1_PLACING: "PLAYER_1_PLACING",
   PLAYER_2_PLACING: "PLAYER_2_PLACING",
+  AI_PLACING: "AI_PLACING",
   PLAYER_1_TURN: "PLAYER_1_TURN",
   PLAYER_2_TURN: "PLAYER_2_TURN",
+  AI_TURN: "AI_TURN",
   GAME_OVER: "GAME_OVER",
 });
+
+const gameModes = Object.freeze({
+  PvP: "PvP",
+  PvAI: "PvAI",
+})
 
 const gameController = (() => {
   let winner;
@@ -22,9 +30,10 @@ const gameController = (() => {
     player2Ships.push(new Ship(shipLength));
   }
 
+  let gameMode = gameModes.PvP;
   let gameState = gameStates.PLAYER_1_PLACING;
   const player1 = new Player("Player 1");
-  const player2 = new Player("Player 2");
+  let player2 = new Player("Player 2");
 
   function getGameState() {
     return gameState;
@@ -110,12 +119,14 @@ const gameController = (() => {
       }
     });
     uiController.bindNewGameBtn(newGame);
+    uiController.bindVsAiBtn(vsAiMode);
   }
 
   function confirmPlacement() {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
         if (player1.gameBoard.areAllShipsPlaced(player1Ships)) {
+          gameMode = gameModes.PvP;
           gameState = gameStates.PLAYER_2_PLACING;
           uiController.render(gameState, getPlayers());
           uiController.updateErrorMessage("");
@@ -133,6 +144,14 @@ const gameController = (() => {
         }
         break;
     }
+  }
+
+  function vsAiMode() {
+    gameMode = gameModes.PvAI;
+    gameState = gameStates.AI_PLACING;
+    player2 = new Computer("AI");
+    uiController.render(gameState, getPlayers());
+    // player2.placeShips(player2Ships);
   }
 
   function newGame() {

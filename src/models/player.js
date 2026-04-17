@@ -7,7 +7,3 @@ class Player {
     this.gameBoard = new GameBoard();
   }
 }
-
-class Computer extends Player {
-
-}

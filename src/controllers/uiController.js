@@ -34,6 +34,12 @@ const uiController = (() => {
         updateMessage(`It's ${players[1].name}'s turn to place ships!`);
         renderShips(player2GameBoard, players[1].gameBoard.board);
         break;
+      case gameStates.AI_PLACING:
+        vsAiBtn.hidden = true;
+        shipSelectionElement.style.display = "none";
+        hideShips(player1GameBoard);
+        updateMessage(`It's ${players[1].name}'s turn to place ships!`);
+        break;
       case gameStates.PLAYER_1_TURN:
         hideShips(player2GameBoard);
         renderAttacks(players);
@@ -68,6 +74,10 @@ const uiController = (() => {
     newGameBtn.addEventListener("click", callback);
   }
 
+  function bindVsAiBtn(callback) {
+    vsAiBtn.addEventListener("click", callback);
+  }
+
   // Maybe switch to Pub/Sub?
   function bindGameBoardListener(callback) {
     for (const gameBoardNode of gameBoardNodeList) {
@@ -92,6 +102,7 @@ const uiController = (() => {
     updateWinnerMessage,
     bindConfirmPlacementBtn,
     bindNewGameBtn,
+    bindVsAiBtn,
     bindGameBoardListener,
     reset,
   };
