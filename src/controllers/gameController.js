@@ -147,6 +147,7 @@ const gameController = (() => {
     });
     uiController.bindNewGameBtn(newGame);
     uiController.bindVsAiBtn(vsAiMode);
+    uiController.addShipsToMenu(shipLengths);
   }
 
   function confirmPlacement() {

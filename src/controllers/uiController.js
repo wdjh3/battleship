@@ -6,6 +6,7 @@ const messageElement = document.getElementById("message");
 const winnerMessageElement = document.getElementById("winner-message");
 const errorMessageElement = document.getElementById("error-message");
 const gameBoardNodeList = document.querySelectorAll(".gameboard");
+const shipMenuNodeList = document.querySelectorAll(".ship-menu");
 const player1GameBoard = document.getElementById("player1-gameboard");
 const player2GameBoard = document.getElementById("player2-gameboard");
 const confirmPlacementBtn = document.getElementById("confirm-placement-btn");
@@ -63,6 +64,23 @@ const uiController = (() => {
     }
   }
 
+  function addShipsToMenu(shipLengths) {
+    for (const shipMenuNode of shipMenuNodeList) {
+      for (let i = 0; i < shipLengths.length; i++) {
+        const shipLength = shipLengths[i];
+        const shipElement = document.createElement("div");
+        shipElement.classList.add("ship-selection");
+        shipElement.dataset.index = `${i}`;
+        for (let i = 0; i < shipLength; i++) {
+          const square = document.createElement("div");
+          square.classList.add("grid-cell", "ship");
+          shipElement.appendChild(square);
+        }
+        shipMenuNode.appendChild(shipElement);
+      }
+    }
+  }
+
   function updateWinnerMessage(player) {
     winnerMessageElement.textContent = `${player.name} wins!`;
   }
@@ -103,6 +121,7 @@ const uiController = (() => {
   return {
     start,
     render,
+    addShipsToMenu,
     updateErrorMessage,
     updateWinnerMessage,
     bindConfirmPlacementBtn,
