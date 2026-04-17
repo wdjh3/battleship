@@ -33,6 +33,7 @@ const gameController = (() => {
   let gameMode = gameModes.PvP;
   let gameState = gameStates.PLAYER_1_PLACING;
   let selectedShipIndex;
+  let rotation = "vertical";
   const player1 = new Player("Player 1");
   const humanPlayer2 = new Player("Player 2");
   const aiPlayer = new Computer("AI");
@@ -63,12 +64,12 @@ const gameController = (() => {
     switch (gameState) {
       case "PLAYER_1_PLACING":
         player1.gameBoard.placeShip(shipObject, [x, y], rotation);
-        uiController.render(gameState, this.getPlayers());
+        uiController.render(gameState, getPlayers());
         return true;
         break;
       case "PLAYER_2_PLACING":
         player2.gameBoard.placeShip(shipObject, [x, y], rotation);
-        uiController.render(gameState, this.getPlayers());
+        uiController.render(gameState, getPlayers());
         return true;
         break;
     }
@@ -86,9 +87,9 @@ const gameController = (() => {
             uiController.updateWinnerMessage(winner);
             return;
           }
-          if ((gameMode === gameModes.PvP)) {
+          if (gameMode === gameModes.PvP) {
             gameState = gameStates.PLAYER_2_TURN;
-          } else if ((gameMode === gameModes.PvAI)) {
+          } else if (gameMode === gameModes.PvAI) {
             aiTurn();
           }
           uiController.render(gameState, getPlayers());
@@ -118,9 +119,9 @@ const gameController = (() => {
     gameState = gameStates.AI_TURN;
     uiController.render(gameState, getPlayers());
     let target = player2.sendAttackTarget();
-    while(!player1.gameBoard.receiveAttack(target)){
+    while (!player1.gameBoard.receiveAttack(target)) {
       target = player2.sendAttackTarget();
-    };
+    }
     if (player1.gameBoard.areAllShipsSunk()) {
       winner = player2;
       gameState = gameStates.GAME_OVER;
@@ -134,27 +135,78 @@ const gameController = (() => {
   function init() {
     uiController.bindConfirmPlacementBtn(confirmPlacement);
     uiController.bindGameBoardListener((e) => {
-      if (e.target.classList.contains("grid-cell")) {
-        if (
-          (gameState === gameStates.PLAYER_1_TURN &&
-            e.target.closest(".gameboard").id === "player1-gameboard") ||
-          (gameState === gameStates.PLAYER_2_TURN &&
-            e.target.closest(".gameboard").id === "player2-gameboard")
-        ) {
-          return;
-        }
-        receiveAttack(Number(e.target.dataset.index));
+      switch (gameState) {
+        case gameStates.PLAYER_1_PLACING:
+          if (
+            Number.isInteger(selectedShipIndex) &&
+            e.target.closest(".gameboard").id === "player1-gameboard"
+          ) {
+            const index = e.target.dataset.index;
+            const coords = [
+              index % gameBoardWidth,
+              Math.floor(index / gameBoardWidth),
+            ];
+            placeShip(player1Ships[selectedShipIndex], coords, rotation);
+          }
+          break;
+        case gameStates.PLAYER_2_PLACING:
+          if (
+            Number.isInteger(selectedShipIndex) &&
+            e.target.closest(".gameboard").id === "player2-gameboard"
+          ) {
+            const index = e.target.dataset.index;
+            const coords = [
+              index % gameBoardWidth,
+              Math.floor(index / gameBoardWidth),
+            ];
+            placeShip(player2Ships[selectedShipIndex], coords, rotation);
+          }
+          break;
+        case gameStates.PLAYER_1_TURN:
+          if (
+            e.target.classList.contains("grid-cell") &&
+            e.target.closest(".gameboard").id === "player2-gameboard"
+          ) {
+            receiveAttack(Number(e.target.dataset.index));
+          }
+          break;
+        case gameStates.PLAYER_2_TURN:
+          if (
+            e.target.classList.contains("grid-cell") &&
+            e.target.closest(".gameboard").id === "player1-gameboard"
+          ) {
+            receiveAttack(Number(e.target.dataset.index));
+          }
+          break;
       }
     });
+    uiController.bindRmbOnGameBoard(toggleRotation);
     uiController.bindNewGameBtn(newGame);
     uiController.bindVsAiBtn(vsAiMode);
     uiController.addShipsToMenu(shipLengths);
     uiController.bindShipMenu(setSelectedShipIndex);
+    uiController.render(gameState, getPlayers());
   }
 
-  function setSelectedShipIndex(index) {
-    selectedShipIndex = index;
+  function setSelectedShipIndex(index, playerIndex) {
+    switch (gameState) {
+      case gameStates.PLAYER_1_PLACING:
+        if (playerIndex === "1") {
+          selectedShipIndex = index;
+        }
+        break;
+      case gameStates.PLAYER_2_PLACING:
+        if (playerIndex === "2") {
+          selectedShipIndex = index;
+        }
+        break;
+    }
     uiController.renderSelectedShip(gameState, selectedShipIndex);
+  }
+
+  function toggleRotation() {
+    rotation = rotation === "vertical" ? "horizontal" : "vertical";
+    uiController.updateRotationMessage(rotation);
   }
 
   function getSelectedShipIndex() {
@@ -166,6 +218,8 @@ const gameController = (() => {
       case gameStates.PLAYER_1_PLACING:
         if (player1.gameBoard.areAllShipsPlaced(player1Ships)) {
           gameMode = gameModes.PvP;
+          selectedShipIndex = null;
+          uiController.renderSelectedShip(gameState, selectedShipIndex);
           gameState = gameStates.PLAYER_2_PLACING;
           uiController.render(gameState, getPlayers());
           uiController.updateErrorMessage("");
@@ -175,6 +229,8 @@ const gameController = (() => {
         break;
       case gameStates.PLAYER_2_PLACING:
         if (player2.gameBoard.areAllShipsPlaced(player2Ships)) {
+          selectedShipIndex = null;
+          uiController.renderSelectedShip(gameState, selectedShipIndex);
           gameState = gameStates.PLAYER_1_TURN;
           uiController.render(gameState, getPlayers());
           uiController.updateErrorMessage("");

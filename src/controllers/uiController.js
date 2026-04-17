@@ -3,6 +3,7 @@ import { gameBoardWidth, gameBoardHeight } from "../models/gameBoard.js";
 import { gameStates } from "./gameController.js";
 
 const messageElement = document.getElementById("message");
+const rotationMessageElement = document.getElementById("rotation-message");
 const winnerMessageElement = document.getElementById("winner-message");
 const errorMessageElement = document.getElementById("error-message");
 const gameBoardNodeList = document.querySelectorAll(".gameboard");
@@ -24,8 +25,8 @@ const uiController = (() => {
   function render(gameState, players) {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
-        renderAttacks(players);
         vsAiBtn.hidden = false;
+        rotationMessageElement.hidden = false;
         newGameBtn.hidden = true;
         shipSelectionElement.style.display = "flex";
         updateMessage(`It's ${players[0].name}'s turn to place ships!`);
@@ -45,6 +46,7 @@ const uiController = (() => {
         renderShips(player2GameBoard, players[1].gameBoard.board);
         break;
       case gameStates.PLAYER_1_TURN:
+        rotationMessageElement.hidden = true;
         hideShips(player2GameBoard);
         renderAttacks(players);
         updateMessage(`It's ${players[0].name}'s turn!`);
@@ -83,6 +85,10 @@ const uiController = (() => {
     }
   }
 
+  function updateRotationMessage(rotation) {
+    rotationMessageElement.textContent = `Rotation: ${rotation.charAt(0).toUpperCase() + rotation.slice(1)}`;
+  }
+
   function updateWinnerMessage(player) {
     winnerMessageElement.textContent = `${player.name} wins!`;
   }
@@ -112,12 +118,24 @@ const uiController = (() => {
     }
   }
 
+  function bindRmbOnGameBoard(callback) {
+    for (const gameBoardNode of gameBoardNodeList) {
+      gameBoardNode.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        callback(e);
+      });
+    }
+  }
+
   function bindShipMenu(callback) {
     for (const shipMenuNode of shipMenuNodeList) {
       shipMenuNode.addEventListener("click", (e) => {
         const selectionShip = e.target.closest(".ship-selection");
         if (selectionShip) {
-          callback(Number(selectionShip.dataset.index));
+          callback(
+            Number(selectionShip.dataset.index),
+            shipMenuNode.id.slice(6, 7),
+          );
         }
       });
     }
@@ -126,13 +144,27 @@ const uiController = (() => {
   function renderSelectedShip(gameState, index) {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
-        for (const shipElement of player1ShipMenu.querySelectorAll(".ship-selection")) {
+        for (const shipElement of player1ShipMenu.querySelectorAll(
+          ".ship-selection",
+        )) {
           console.log(shipElement);
           shipElement.classList.remove("selected");
           if (shipElement.dataset.index === `${index}`) {
             shipElement.classList.add("selected");
           }
         }
+        break;
+      case gameStates.PLAYER_2_PLACING:
+        for (const shipElement of player2ShipMenu.querySelectorAll(
+          ".ship-selection",
+        )) {
+          console.log(shipElement);
+          shipElement.classList.remove("selected");
+          if (shipElement.dataset.index === `${index}`) {
+            shipElement.classList.add("selected");
+          }
+        }
+        break;
     }
   }
 
@@ -149,12 +181,14 @@ const uiController = (() => {
     render,
     addShipsToMenu,
     renderSelectedShip,
+    updateRotationMessage,
     updateErrorMessage,
     updateWinnerMessage,
     bindConfirmPlacementBtn,
     bindNewGameBtn,
     bindVsAiBtn,
     bindGameBoardListener,
+    bindRmbOnGameBoard,
     bindShipMenu,
     reset,
   };
