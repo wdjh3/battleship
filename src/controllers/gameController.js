@@ -192,16 +192,23 @@ const gameController = (() => {
     switch (gameState) {
       case gameStates.PLAYER_1_PLACING:
         if (playerIndex === "1") {
+          resetRotation();
           selectedShipIndex = index;
         }
         break;
       case gameStates.PLAYER_2_PLACING:
         if (playerIndex === "2") {
+          resetRotation();
           selectedShipIndex = index;
         }
         break;
     }
     uiController.renderSelectedShip(gameState, selectedShipIndex);
+  }
+
+  function resetRotation() {
+    rotation = "vertical";
+    uiController.updateRotationMessage(rotation);
   }
 
   function toggleRotation() {
