@@ -32,6 +32,7 @@ const gameController = (() => {
 
   let gameMode = gameModes.PvP;
   let gameState = gameStates.PLAYER_1_PLACING;
+  let selectedShipIndex;
   const player1 = new Player("Player 1");
   const humanPlayer2 = new Player("Player 2");
   const aiPlayer = new Computer("AI");
@@ -148,6 +149,16 @@ const gameController = (() => {
     uiController.bindNewGameBtn(newGame);
     uiController.bindVsAiBtn(vsAiMode);
     uiController.addShipsToMenu(shipLengths);
+    uiController.bindShipMenu(setSelectedShipIndex);
+  }
+
+  function setSelectedShipIndex(index) {
+    selectedShipIndex = index;
+    uiController.renderSelectedShip(gameState, selectedShipIndex);
+  }
+
+  function getSelectedShipIndex() {
+    return selectedShipIndex;
   }
 
   function confirmPlacement() {
@@ -220,6 +231,7 @@ const gameController = (() => {
     init,
     receiveAttack, // TODO: Delete after testing
     confirmPlacement,
+    getSelectedShipIndex,
     newGame,
   };
 })();

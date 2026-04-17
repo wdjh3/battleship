@@ -183,6 +183,10 @@ header {
   padding: 1vw;
 }
 
+.ship-selection.selected .grid-cell.ship {
+  background-color: red;
+}
+
 .btn {
   border: none;
   font-size: 2rem;

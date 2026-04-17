@@ -7,6 +7,8 @@ const winnerMessageElement = document.getElementById("winner-message");
 const errorMessageElement = document.getElementById("error-message");
 const gameBoardNodeList = document.querySelectorAll(".gameboard");
 const shipMenuNodeList = document.querySelectorAll(".ship-menu");
+const player1ShipMenu = document.getElementById("player1-ship-menu");
+const player2ShipMenu = document.getElementById("player2-ship-menu");
 const player1GameBoard = document.getElementById("player1-gameboard");
 const player2GameBoard = document.getElementById("player2-gameboard");
 const confirmPlacementBtn = document.getElementById("confirm-placement-btn");
@@ -110,6 +112,30 @@ const uiController = (() => {
     }
   }
 
+  function bindShipMenu(callback) {
+    for (const shipMenuNode of shipMenuNodeList) {
+      shipMenuNode.addEventListener("click", (e) => {
+        const selectionShip = e.target.closest(".ship-selection");
+        if (selectionShip) {
+          callback(Number(selectionShip.dataset.index));
+        }
+      });
+    }
+  }
+
+  function renderSelectedShip(gameState, index) {
+    switch (gameState) {
+      case gameStates.PLAYER_1_PLACING:
+        for (const shipElement of player1ShipMenu.querySelectorAll(".ship-selection")) {
+          console.log(shipElement);
+          shipElement.classList.remove("selected");
+          if (shipElement.dataset.index === `${index}`) {
+            shipElement.classList.add("selected");
+          }
+        }
+    }
+  }
+
   function reset() {
     winnerMessageElement.textContent = "";
     for (const gameBoardNode of gameBoardNodeList) {
@@ -122,12 +148,14 @@ const uiController = (() => {
     start,
     render,
     addShipsToMenu,
+    renderSelectedShip,
     updateErrorMessage,
     updateWinnerMessage,
     bindConfirmPlacementBtn,
     bindNewGameBtn,
     bindVsAiBtn,
     bindGameBoardListener,
+    bindShipMenu,
     reset,
   };
 })();
