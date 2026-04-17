@@ -86,7 +86,7 @@ const uiController = (() => {
   }
 
   function updateRotationMessage(rotation) {
-    rotationMessageElement.textContent = `Rotation: ${rotation.charAt(0).toUpperCase() + rotation.slice(1)}`;
+    rotationMessageElement.textContent = `Rotation: ${rotation.charAt(0).toUpperCase() + rotation.slice(1)} (Right click on board to rotate)`;
   }
 
   function updateWinnerMessage(player) {

@@ -243,6 +243,7 @@ const gameController = (() => {
 
   function vsAiMode() {
     if (player1.gameBoard.areAllShipsPlaced(player1Ships)) {
+      selectedShipIndex = null;
       startAiGame();
     } else {
       uiController.updateErrorMessage("ALL SHIPS MUST SAIL!");
